@@ -4,6 +4,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.route.js";
+import companyRoute from "./routes/company.routes.js";
+import jobRoute from './routes/job.route.js';
+
+
+
 
 dotenv.config();
 
@@ -35,6 +40,9 @@ app.get("/home", (req, res) => {
 
 // API
 app.use("/api/v1/user", userRoute);   //http://localhost:8000/api/v1/user/login or register or profile/update
+app.use("/api/v1/company", companyRoute); //Company Routes
+app.use("/api/v1/job", jobRoute);  // Job Routes
+
 
 app.listen(PORT, () => {
     connectDB();

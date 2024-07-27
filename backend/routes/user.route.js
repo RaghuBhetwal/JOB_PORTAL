@@ -1,11 +1,12 @@
 import express from "express";
-import { register, login, updateProfile } from "..controllers/user.controllers.js";
-import isAuthenticated from "./path_to_your_middleware";
+import { register, login, logout, updateProfile } from "../controllers/user.controller.js";
+import isAuthenticated from "../middlewares/isauthenticated.js"; 
 
 const router = express.Router();
 
-router.route("/register").post(register);
-router.route("/login").post(login);
-router.route("/profile/update").post(isAuthenticated, updateProfile); // Securing this route 
+router.post("/register", register);
+router.post("/login", login);
+router.get("/logout", logout);  // Change to POST for logout if necessary
+router.post("/profile/update", isAuthenticated, updateProfile); // Securing this route 
 
 export default router;

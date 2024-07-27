@@ -1,7 +1,9 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"; // Correct import
-import { JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+
+
+const { JsonWebTokenError } = jwt;
 
 export const register = async (req, res) => {
     try {
@@ -118,7 +120,6 @@ export const logout = async (req, res) => {
                 message: "Logged Out Successfully",
                 success: true
             });
-
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -132,16 +133,19 @@ export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         const file = req.file;
-        if (!fullname || !email || !phoneNumber || !bio || !skills) {
-            return res.status(400).json({
-                message: "Enter all the Values",
-                success: false
-            });
-        }
+        // if (!fullname || !email || !phoneNumber || !bio || !skills) {
+        //     return res.status(400).json({
+        //         message: "Enter all the Values",
+        //         success: false
+        //     });
+        // }
 
         // Cloudinary code for file upload can be added here
+        let skillsArray;
+        if (skills) {
 
-        const skillsArray = skills.split(",");
+            skillsArray = skills.split(",");
+        }
         const userId = req.user.id; // Assuming req.user is set by an authentication middleware
         let user = await User.findById(userId);
 
@@ -153,13 +157,17 @@ export const updateProfile = async (req, res) => {
         }
 
         // Update user data
-        user.fullname = fullname;
-        user.email = email;
-        user.phoneNumber = phoneNumber;
-        user.profile.bio = bio;
-        user.profile.skills = skillsArray;
+        if (fullname) { user.fullname = fullname }
+        if (email) { user.email = email };
+        if (phoneNumber) { user.phoneNumber = phoneNumber };
+        if (bio) { user.profile.bio = bio };
+        if (skills) { user.profile.skills = skillsArray }
+
+
+
 
         // Resume upload handling can be added here
+        
 
         await user.save();
 
